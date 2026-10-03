@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>診断結果シート（見本）</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%274%27 fill=%27%231F1D1A%27/%3E%3Crect x=%277%27 y=%277%27 width=%275%27 height=%2718%27 fill=%27%23F4877A%27/%3E%3Crect x=%2713.5%27 y=%277%27 width=%275%27 height=%2718%27 fill=%27%233FBFB0%27/%3E%3Crect x=%2720%27 y=%277%27 width=%275%27 height=%2718%27 fill=%27%23F7E08E%27/%3E%3C/svg%3E">
+<!-- 読み込むファイルの ?v= は版番号。CSS・JS を直したら上げる（ブラウザが古いファイルを使わないように） -->
+<link rel="stylesheet" href="assets/app.css?v=2026-09-27.6">
+<script defer src="js/data-pc.js?v=2026-09-27.6"></script>
+<script defer src="js/data-kokkaku.js?v=2026-09-27.6"></script>
+<script defer src="js/data-face.js?v=2026-09-27.6"></script>
+<script defer src="js/data-common.js?v=2026-09-27.6"></script>
+<script defer src="js/util.js?v=2026-09-27.6"></script>
+<script defer src="js/figures.js?v=2026-09-27.6"></script>
+<script defer src="js/state.js?v=2026-09-27.6"></script>
+<script defer src="js/view-input.js?v=2026-09-27.6"></script>
+<script defer src="js/view-sheet.js?v=2026-09-27.6"></script>
+<script defer src="js/view-message.js?v=2026-09-27.6"></script>
+<script defer src="js/view-settings.js?v=2026-09-27.6"></script>
+<script defer src="js/main.js?v=2026-09-27.6"></script>
+</head>
+<body data-view="sheet">
+<a class="skip" href="#main">本文へ移動</a>
+<header class="topbar">
+  <p class="brand">診断結果シート<span class="brand-tag">見本</span></p>
+  <nav class="topnav" id="topnav" aria-label="画面の切り替え"></nav>
+</header>
+<p class="demo-bar">見本です（架空のお客様・入力は保存されません）</p>
+<main id="main" tabindex="-1">
+  <section class="pane pane-input" id="pane-input" aria-label="結果を入力"></section>
+  <section class="pane pane-sheet" id="pane-sheet" aria-label="結果シート"></section>
+  <section class="pane pane-message" id="pane-message" aria-label="お客様に送る文"></section>
+  <section class="pane pane-settings" id="pane-settings" aria-label="項目の設定"></section>
+  <noscript><p class="noscript">この画面は JavaScript を使います。ブラウザの設定で JavaScript をオンにしてください。</p></noscript>
+</main>
+<nav class="tabbar" id="tabbar" aria-label="画面の切り替え"></nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
