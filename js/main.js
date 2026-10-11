@@ -36,6 +36,7 @@ window.DS = window.DS || {};
   function changed(opts = {}) {
     if (opts.input) DS.views.input.render();
     DS.views.sheet.render();
+    DS.views.look.render();
     DS.views.input.refreshCounts();
   }
   function renderAll() {

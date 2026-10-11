@@ -24,6 +24,7 @@ DS.views = DS.views || {};
       h('div', { class: 'track', 'aria-hidden': 'true' }, dot),
       h('div', { class: 'ends', 'aria-hidden': 'true' }, h('span', { text: d.left }), h('span', { text: d.right })));
   }
+  V.meter = meter;
   const dots = (colors) => h('div', { class: 'dots' }, colors.map(([n, hex]) => h('span', { class: 'dot-i' }, h('i', { bg: hex, 'aria-hidden': 'true' }), n)));
 
   /* ---------- 画面全体 ---------- */
@@ -36,6 +37,18 @@ DS.views = DS.views || {};
       pane.replaceChildren(notice, h('div', { class: 'empty' },
         h('p', { text: 'まだ結果が入っていません。［入力］でタイプを選ぶと、ここにシートができます。' }),
         h('button', { type: 'button', class: 'btn btn-primary only-sp', onclick: () => DS.app.go('input') }, '入力する')));
+      return;
+    }
+    const modeBar = h('div', { class: 'sheet-mode', role: 'group', 'aria-label': 'シートの形' },
+      [['visual', 'イラスト版', 'A4・5枚'], ['detail', 'くわしい版', '文字が中心']].map(([id, label, sub]) =>
+        h('button', { type: 'button', class: 'seg-btn', 'aria-pressed': String(S.ui.sheetMode === id), onclick: () => { S.ui.sheetMode = id; V.render(); } },
+          S.ui.sheetMode === id ? icon('check') : null, h('span', null, label, h('small', { text: sub })))));
+    const actions = h('div', { class: 'sheet-actions' },
+      h('button', { type: 'button', class: 'btn btn-primary', onclick: V.print }, icon('printer'), 'PDFにする'),
+      h('button', { type: 'button', class: 'btn', onclick: () => DS.app.go('message') }, icon('message'), '送る文へ'));
+    const hint = h('p', { class: 'print-hint', text: '［PDFにする］を押すと、印刷の画面が出ます。プリンターの代わりに「PDFに保存」を選ぶと、A4のPDFになります。' });
+    if (S.ui.sheetMode === 'visual') {
+      pane.replaceChildren(notice, modeBar, actions, DS.views.visual.build(), hint);
       return;
     }
     const s = Q.season();
@@ -69,11 +82,7 @@ DS.views = DS.views || {};
     if (bandColors.length) sheet.append(h('div', { class: 'band', 'aria-hidden': 'true' }, bandColors.slice(0, 12).map(([, hex]) => h('span', { bg: hex }))));
     sheet.append(inner);
 
-    const actions = h('div', { class: 'sheet-actions' },
-      h('button', { type: 'button', class: 'btn btn-primary', onclick: V.print }, icon('printer'), 'PDFにする'),
-      h('button', { type: 'button', class: 'btn', onclick: () => DS.app.go('message') }, icon('message'), '送る文へ'));
-    pane.replaceChildren(notice, actions, sheet,
-      h('p', { class: 'print-hint', text: '［PDFにする］を押すと、印刷の画面が出ます。プリンターの代わりに「PDFに保存」を選ぶと、A4のPDFになります。' }));
+    pane.replaceChildren(notice, modeBar, actions, sheet, hint);
   };
 
   /* 01 診断の結果（まとめ） */

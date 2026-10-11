@@ -9,7 +9,7 @@ DS.views = DS.views || {};
 
   // 入力を変えたら印をつける（見本の切りかえで消える前に確かめるため。D-50）
   V.changed = () => { S.dirty = true; DS.app.changed(); };
-  const same = (a, b) => Object.keys(b).every((k) => a[k] === b[k]);
+  const same = V.same = (a, b) => Object.keys(b).every((k) => a[k] === b[k]);
 
   /* ---------- 部品 ---------- */
   // ひとつだけ選ぶ（選択中は太い枠・印・太字）
@@ -78,11 +78,12 @@ DS.views = DS.views || {};
       h('div', { id: 'in-kk-wrap' }),
       h('div', { id: 'in-face-wrap' }),
       h('div', { id: 'in-custom-wrap' }),
+      h('div', { id: 'in-look-wrap' }),
       h('div', { id: 'in-checks-wrap' }),
       V.memoSec(),
       h('button', { type: 'button', class: 'btn btn-primary btn-block go-sheet only-sp', onclick: () => DS.app.go('sheet') }, 'シートを見る', icon('arrowRight'))
     );
-    V.renderPc(); V.renderStyle('kk'); V.renderStyle('face'); V.renderCustom(); V.renderChecks();
+    V.renderPc(); V.renderStyle('kk'); V.renderStyle('face'); V.renderCustom(); V.renderChecks(); DS.views.look.render();
     V.refreshCounts();
   };
   V.renderPc = () => document.getElementById('in-pc-wrap').replaceChildren(S.use.pc ? V.pcSec() : '');
@@ -118,7 +119,7 @@ DS.views = DS.views || {};
         h('div', { class: 'field' }, h('label', { for: 'in-date', class: 'label', text: '診断日' }), date)),
       h('nav', { class: 'jump', 'aria-label': '入力の中の移動' },
         h('a', { href: '#in-pc' }, S.settings.names.pc), h('a', { href: '#in-kk' }, S.settings.names.kk), h('a', { href: '#in-face' }, S.settings.names.face),
-        h('a', { href: '#in-checks' }, '買い物のチェック'), h('a', { href: '#in-memo' }, 'ひと言メモ')));
+        h('a', { href: '#in-look' }, 'イラスト'), h('a', { href: '#in-checks' }, '買い物のチェック'), h('a', { href: '#in-memo' }, 'ひと言メモ')));
   };
 
   V.diagSec = function () {
@@ -211,6 +212,7 @@ DS.views = DS.views || {};
   const { h, icon } = DS.util;
   const S = DS.state;
   const Q = DS.q;
+  const same = V.same;
 
   const ADD_EXAMPLE = {
     shape: '例: Hライン', neck: '例: カシュクール', tops: '例: ボウタイのブラウス', bottoms: '例: ラップスカート',

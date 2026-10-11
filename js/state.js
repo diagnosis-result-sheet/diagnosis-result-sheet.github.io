@@ -22,7 +22,7 @@ window.DS = window.DS || {};
       typeNames: {}, typeCatch: {},
       templates: { ...D.templates }
     },
-    ui: { settingsPage: null }
+    ui: { settingsPage: null, sheetMode: 'visual', lookCoord: 0 }
   };
 
   /* タイプごとの Set（タイプを切りかえても、前に選んだものは残る） */
@@ -158,6 +158,7 @@ window.DS = window.DS || {};
     for (const c of S.custom) { c.use = true; c.value = null; c.text = ''; }
     S.msg.edited = { line: null, mailSubject: null, mailBody: null };
     S.dirty = false;
+    if (DS.look) S.look = DS.look.empty(); // 絵の選び直しは、見本を切りかえると、おまかせに戻る
   }
 
   DS.state = S;

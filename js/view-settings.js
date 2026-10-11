@@ -83,7 +83,7 @@ DS.views = DS.views || {};
           field(`set-name-${page}`, '診断の名前（入力とシートに出ます）', S.settings.names[page], (v) => { S.settings.names[page] = v.trim() || data.name; changed(); })),
         h('section', { class: 'in-sec' }, h('h2', null, '結果の名前と説明'),
           h('p', { class: 'hint', text: { pc: '自分の理論での呼び方に合わせて変えられます（例: 「イエベ春」を「スプリング」に）。', kk: '自分の理論での呼び方に合わせて変えられます。', face: '8タイプの名前と並びは、一般的な顔タイプ診断®に合わせています。呼び方を変えたいときは、ここで変えられます。' }[page] }),
-          page === 'face' ? h('p', { class: 'tm', text: `${DS.data.face.note}${DS.data.face.trademark}` }) : null,
+          page === 'face' ? h('p', { class: 'hint tm', text: `${DS.data.face.note}${DS.data.face.trademark}` }) : null,
           data.types.map((t) => h('div', { class: 'type-edit mt' },
             field(`set-tn-${t.id}`, `結果の名前（もとは「${t.name}」）`, Q.typeName(t), (v) => { S.settings.typeNames[t.id] = v.trim(); changed(); }),
             field(`set-tc-${t.id}`, 'ひと言の説明（シートの「診断の結果」に出ます）', Q.typeCatch(t), (v) => { S.settings.typeCatch[t.id] = v.trim(); changed(); }, { area: true, max: '80' })))),
