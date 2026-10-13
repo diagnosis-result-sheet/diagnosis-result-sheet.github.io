@@ -76,9 +76,9 @@ window.DS = window.DS || {};
     const hem = o.hem || t.hem;
     const n = NECK[t.neck];
     const out = [];
-    const sl = (node) => [mirror(node), node];
-    out.push(...sl(P(SLEEVE[sleeve], base(color))));
-    out.push(...sl(P(sleeve === 'puff' ? 'M16 47 Q27 50 37 43' : sleeve === 'long' ? 'M9 80 L24 86' : sleeve === 'q3' ? 'M13 66 L26 70' : 'M18 50 L31 54', line(color))));
+    const sl = (make) => [mirror(make()), make()]; // 左右のそで。1つの部品は1か所にしか置けないので、2回作る
+    out.push(...sl(() => P(SLEEVE[sleeve], base(color))));
+    out.push(...sl(() => P(sleeve === 'puff' ? 'M16 47 Q27 50 37 43' : sleeve === 'long' ? 'M9 80 L24 86' : sleeve === 'q3' ? 'M13 66 L26 70' : 'M18 50 L31 54', line(color))));
     const body = `M35 23 L${n.a[0]} ${n.a[1]} ${n.seg} L85 23 C87 45 87 70 86 ${hem} Q60 ${hem + 5} 34 ${hem} C33 70 33 45 35 23 Z`;
     out.push(P(body, base(color)));
     out.push(shadeIn(body, 'M76 -10 L120 -10 L120 200 L76 200 Z', color));

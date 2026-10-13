@@ -40,7 +40,7 @@ DS.views = DS.views || {};
       return;
     }
     const modeBar = h('div', { class: 'sheet-mode', role: 'group', 'aria-label': 'シートの形' },
-      [['visual', 'イラスト版', 'A4・5枚'], ['detail', 'くわしい版', '文字が中心']].map(([id, label, sub]) =>
+      [['visual', 'イラスト版', Q.kk() ? 'A4・5枚' : 'A4・3枚'], ['detail', 'くわしい版', '文字が中心']].map(([id, label, sub]) =>
         h('button', { type: 'button', class: 'seg-btn', 'aria-pressed': String(S.ui.sheetMode === id), onclick: () => { S.ui.sheetMode = id; V.render(); } },
           S.ui.sheetMode === id ? icon('check') : null, h('span', null, label, h('small', { text: sub })))));
     const actions = h('div', { class: 'sheet-actions' },

@@ -34,13 +34,16 @@ DS.views = DS.views || {};
       s ? h('div', { class: 'words' }, s.words.map((w) => h('span', { class: 'word', text: w }))) : null,
       h('p', { class: 'vp-who' }, [`${name ? `${name}様` : 'お客様'}`, fmtDate(S.client.date), `担当　${S.settings.staff}`].filter(Boolean).join('　／　')));
 
+    const noName = name ? null : SV().unset('お客様の呼び名が入っていないため、「お客様」と出しています。');
+    const noPc = s ? null : SV().unset('パーソナルカラーが選ばれていないため、髪・メイクの色の欄はのせていません。絵の色は仮の色です。');
     const boxes = [];
     if (s) {
       const bestNames = new Set(best.map((c) => c[0]));
       boxes.push(h('section', { class: 'vp-box' },
         h('h2', { class: 'vp-h', text: 'カラーパレット' }),
         h('div', { class: 'vpal' }, Q.palette(s).map(([n, hex]) => h('div', { class: bestNames.has(n) ? 'vp-c is-best' : 'vp-c' }, h('i', { bg: hex, 'aria-hidden': 'true' }), h('span', { text: n })))),
-        best.length ? h('p', { class: 'legend' }, h('i', { 'aria-hidden': 'true' }), '太い枠と太字は、特に似合う色です') : null));
+        best.length ? h('p', { class: 'legend' }, h('i', { 'aria-hidden': 'true' }), '太い枠と太字は、特に似合う色です')
+          : SV().unset('特に似合う色が選ばれていないため、色見本に太い枠はついていません（［入力］で選べます）。')));
       const sc = Q.scalesOf(s);
       boxes.push(h('section', { class: 'vp-box' },
         h('h2', { class: 'vp-h', text: '色の特徴' }),
@@ -48,9 +51,11 @@ DS.views = DS.views || {};
         h('p', { class: 'vp-sum', text: s.summary })));
     }
 
-    const fig = h('figure', { class: 'vf-fig' }, DS.look.faceSvg(look, `顔の絵。髪型は${f.hairStyle.label}、髪の色は${f.hair[0]}、リップは${f.lip[0]}です`),
+    const fig = h('figure', { class: 'vf-fig' }, DS.look.faceSvg(look, s ? `顔の絵。髪型は${f.hairStyle.label}、髪の色は${f.hair[0]}、リップは${f.lip[0]}です` : `顔の絵。髪型は${f.hairStyle.label}です`),
       h('figcaption', { text: `髪型：${f.hairStyle.label}` }));
-    const faceBox = h('section', { class: 'vp-box vp-facebox' },
+    // 色の診断がないときは、色の欄をのせない（仮の色を、診断の結果のように見せない）
+    const faceBox = !s ? h('section', { class: 'vp-box vp-facebox' }, h('h2', { class: 'vp-h', text: '髪型' }), h('div', { class: 'vp-face is-solo' }, fig))
+      : h('section', { class: 'vp-box vp-facebox' },
       h('h2', { class: 'vp-h', text: '髪・メイク・アクセサリーの色' }),
       h('div', { class: 'vp-face' },
         h('div', { class: 'vf-col' }, group('髪の色', look.opts.hair, f.hair), group('アイシャドウ', look.opts.eye, f.eye), group('ネイル', look.opts.nail, f.nail)),
@@ -58,7 +63,7 @@ DS.views = DS.views || {};
         h('div', { class: 'vf-col' }, group('チーク', look.opts.cheek, f.cheek), group('リップ', look.opts.lip, f.lip), group('アクセサリーの金属', look.opts.metal, f.metal))),
       h('p', { class: 'legend' }, h('i', { 'aria-hidden': 'true' }), '太い枠は、絵に使っている色です'));
 
-    return h('section', { class: 'vpage vp1', 'aria-label': '色・髪・メイク' }, head(), hero, ...boxes, faceBox);
+    return h('section', { class: 'vpage vp1', 'aria-label': '色・髪・メイク' }, head(), hero, noName, noPc, ...boxes, faceBox);
   }
 
   /* ---------- 2枚目 ---------- */
@@ -67,8 +72,8 @@ DS.views = DS.views || {};
     const parts = c.parts.map((p) => h('li', null,
       h('i', { class: 'pdot', bg: p.color[1], 'aria-hidden': 'true' }),
       h('span', { class: 'pl', text: p.label }),
-      h('span', { class: 'pn', text: `${p.shape}（${p.color[0]}）` })));
-    const label = `${c.title}のコーデの絵。${c.parts.map((p) => `${p.label}は${p.color[0]}の${p.shape}`).join('、')}`;
+      h('span', { class: 'pn', text: Q.season() ? `${p.shape}（${p.color[0]}）` : p.shape })));
+    const label = `${c.title}のコーデの絵。${c.parts.map((p) => (Q.season() ? `${p.label}は${p.color[0]}の${p.shape}` : `${p.label}は${p.shape}`)).join('、')}`;
     return h('figure', { class: 'vp-coord' }, DS.illust.outfit(c, label), h('figcaption', null, h('h3', { text: c.title }), h('ul', { class: 'vp-parts' }, parts)));
   }
   /* ---------- 骨格のページ（体型の図・似合う服の一覧） ---------- */
@@ -125,8 +130,9 @@ DS.views = DS.views || {};
   function page2(look, s) {
     return h('section', { class: 'vpage vp2', 'aria-label': '洋服のコーデ' }, head(),
       h('h2', { class: 'vp-title', text: 'ファッション' }),
-      h('section', { class: 'vp-box' }, h('h2', { class: 'vp-h', text: '基本の色' }), row(look.basics)),
-      h('section', { class: 'vp-box' }, h('h2', { class: 'vp-h', text: 'アクセントの色' }), row(look.accents)),
+      s ? h('section', { class: 'vp-box' }, h('h2', { class: 'vp-h', text: '基本の色' }), row(look.basics)) : SV().unset('パーソナルカラーが選ばれていないため、色の欄はのせていません。コーデの絵の色は仮の色です。'),
+      s ? h('section', { class: 'vp-box' }, h('h2', { class: 'vp-h', text: 'アクセントの色' }), row(look.accents)) : null,
+      Q.kk() ? null : SV().unset('骨格が選ばれていないため、服の形は仮の形です（［入力］の「イラストを選ぶ」で変えられます）。'),
       h('div', { class: 'vp-coords' }, look.coords.map(coordFig)),
       h('p', { class: 'legend' }, '絵は、タイプからの目安です。同じ形・色でなくても、雰囲気の参考にしてください。'));
   }
@@ -144,7 +150,7 @@ DS.views = DS.views || {};
       typeCards.length ? h('section', { class: 'vp-box' }, h('h2', { class: 'vp-h', text: '似合う形・テイスト' }), h('div', { class: 'types' }, typeCards)) : null,
       worst.length ? h('section', { class: 'vp-box' }, h('h2', { class: 'vp-h', text: '苦手になりやすい色' }),
         h('div', { class: 'worst' }, worst.map(([n, hex]) => h('div', null, h('i', { bg: hex, 'aria-hidden': 'true' }), n))),
-        s ? h('p', { class: 'note', text: s.worstTip }) : null) : null,
+        s ? h('p', { class: 'note', text: s.worstTip }) : null) : (s ? SV().unset('苦手になりやすい色が選ばれていないため、この欄はのせていません。') : null),
       groups.length ? h('section', { class: 'vp-box' }, h('h2', { class: 'vp-h', text: '買い物のときのチェック' }),
         h('div', { class: 'cl-groups' }, groups.map((g) => h('div', { class: 'cl-group' }, h('h4', { text: g.title }), h('ul', { class: 'cl' }, g.items.map((it) => h('li', { text: it.text }))))))) : null,
       S.memo.trim() ? h('section', { class: 'vp-box' }, h('h2', { class: 'vp-h', text: `${S.settings.staff}からのひと言` }), h('div', { class: 'letter' }, h('p', { class: 'body', text: S.memo.trim() }))) : null,

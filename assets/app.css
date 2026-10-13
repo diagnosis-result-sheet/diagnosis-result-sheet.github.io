@@ -415,6 +415,7 @@ body[data-view="settings"] .pane-settings{display:block}
 .vs.is-on i,.vp-c.is-best i{outline:3px solid var(--text);outline-offset:2px}
 .vs.is-on,.vp-c.is-best{font-weight:600}
 .vp-face{display:grid;gap:var(--sp-4)}
+.vp-face.is-solo{grid-template-columns:minmax(0,1fr)} /* 色の診断がないとき: 顔の絵だけを1列で */
 .vf-group{margin-bottom:var(--sp-4)}
 .vf-gl{font-size:var(--fs-s);font-weight:600;margin-bottom:var(--sp-2)}
 .vf-fig{margin:0;text-align:center;order:-1}
@@ -460,7 +461,7 @@ body[data-view="settings"] .pane-settings{display:block}
 .vl-item{margin:0;text-align:center}
 .vl-item svg{display:block;width:100%;height:96px;margin:0 auto var(--sp-2)}
 .vl-name{font-size:var(--fs-s);font-weight:600;line-height:1.4}
-.vl-why{font-size:var(--fs-xs);color:var(--text-sub);line-height:1.5;margin-top:2px}
+.vl-why{font-size:var(--fs-m);color:var(--text-sub);line-height:1.6;margin-top:2px}
 .vm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-4) var(--sp-3)}
 .vm-item{margin:0;display:grid;grid-template-columns:56px minmax(0,1fr);gap:var(--sp-2);align-items:start}
 .vm-item svg{display:block;width:56px;height:56px}
@@ -557,6 +558,7 @@ body[data-view="settings"] .pane-settings{display:block}
   .type-card,.best>div,.palrow,.combo,.kv>div,.kufu li,.cl li,.letter,.meter,.fig,.worst>div{break-inside:avoid}
   /* イラストシート: 1枚目・2枚目をそれぞれ A4 の1枚に収める */
   .sheet-mode{display:none!important}
+  .vl-why{font-size:var(--fs-xs);line-height:1.5}
   .vsheet{display:block;margin-top:0}
   .vpage{border:0;border-radius:0;padding:0;break-after:page}
   .vpage:last-child{break-after:auto}
